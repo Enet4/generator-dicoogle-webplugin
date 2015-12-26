@@ -1,0 +1,36 @@
+{
+  "name":"<%= appname %>",
+  "version": "0.1.0",
+  "description": "<%= description %>",
+  "files": [
+    "module.js"
+  ],
+  "scripts": {
+    "build": "babel src/index.js > module.js",
+    "prepublish": "npm run build"
+  },
+  <% if (author.name && author.email) { %>
+  "author": "<%= author.name %> <<%= author.email %>>",
+  <% } else if (author.name) { %>
+  "author": "<%= author.name %>",
+  <% } %>
+  <% if (typeof license === 'string') { %>
+  "license": "<%= license %>",
+  <% } %>
+  <% if (author.github) { %>
+  "repository": {
+      "type": "git",
+      "url": "<%= author.github %>/<%= appname %>"
+  },
+  <% } %>
+  "keywords": [
+    "dicoogle", "dicoogle-plugin"
+  ],
+  "dicoogle": {
+    "slot-id": "<%= dicoogle.slotId %>",
+    <% if (dicoogle.caption && dicoogle.caption !== '') { %>
+    "caption": "<%= dicoogle.caption %>",
+    <% } %>
+    "module": "module.js"
+  }
+}
