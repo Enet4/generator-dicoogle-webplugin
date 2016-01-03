@@ -1,4 +1,5 @@
 var generators = require('yeoman-generator');
+var capitalize = require('capitalize');
 
 module.exports = generators.Base.extend({
   helper: {
@@ -9,7 +10,10 @@ module.exports = generators.Base.extend({
       if (appname.indexOf("dicoogle-") === 0) {
           appname = appname.substr(9);
       }
-      return appname.replace(/\\-+/g, ' ');
+      if (appname.indexOf("-plugin") === appname.length - 7) {
+          appname = appname.substr(0, appname.length - 7);
+      }
+      return capitalize.words(appname.replace(/\\-+/g, ' '));
     }
   },
 

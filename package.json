@@ -3,21 +3,22 @@
   "version": "0.1.0",
   "description": "A Yeoman generator for Dicoogle web UI plugin projects",
   "repository": {
-      "type": "git",
-      "url": "Enet4/generator-dicoogle-webplugin"
+    "type": "git",
+    "url": "Enet4/generator-dicoogle-webplugin"
   },
   "main": "app/index.js",
   "files": [
     "app"
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "author": "Eduardo Pinho <eduardopinho@ua.pt>",
   "license": "MIT",
   "keywords": [
-    "yeoman-generator", "dicoogle"
+    "yeoman-generator",
+    "dicoogle"
   ],
   "dependencies": {
+    "capitalize": "^1.0.0",
     "yeoman-generator": "^0.22.1"
   }
 }
