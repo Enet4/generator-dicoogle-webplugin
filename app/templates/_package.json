@@ -31,6 +31,6 @@
     <% if (dicoogle.caption && dicoogle.caption !== '') { %>
     "caption": "<%= dicoogle.caption %>",
     <% } %>
-    "module": "module.js"
+    "module-file": "module.js"
   }
 }
