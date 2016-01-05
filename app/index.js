@@ -1,6 +1,8 @@
 var generators = require('yeoman-generator');
 var capitalize = require('capitalize');
 
+var PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'settings' ];
+
 module.exports = generators.Base.extend({
   helper: {
     cleanAppname: function(appname) {
@@ -44,7 +46,7 @@ module.exports = generators.Base.extend({
           type: 'list',
           name: 'slot-id',
           message: 'What type of plugin (slot ID)?',
-          choices: ['menu', 'search', 'query', 'result', 'settings' ],
+          choices: PLUGIN_TYPES,
           default: 'menu'
         },
         {

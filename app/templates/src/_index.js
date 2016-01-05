@@ -3,15 +3,15 @@
 export default class MyPlugin {
     
     constructor() {
-        // TODO initialize plugin instance here
-        
+        // TODO initialize plugin here
     }
     
     /** 
      * @param {DOMElement} parent
+     * @param {DOMElement} slot
      */
-    render(parent) {
-        // TODO mount your web component here
+    render(parent, slot) {
+        // TODO mount a new web component here
         const div = document.createElement('div');
         div.innerHTML = 'Hello, Dicoogle!';
         parent.appendChild(div);
