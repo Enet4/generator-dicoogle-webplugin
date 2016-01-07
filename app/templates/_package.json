@@ -6,7 +6,8 @@
     "module.js"
   ],
   "scripts": {
-    "build": "babel src/index.js > module.js",
+    "build": "webpack",
+    "build-debug": "webpack --devtool inline-source-map",
     "prepublish": "npm run build"
   },
   <% if (author.name && author.email) { %>

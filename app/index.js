@@ -23,7 +23,8 @@ module.exports = generators.Base.extend({
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
     this.devDependencies = [
-        "babel-cli", "babel-preset-es2015"
+        'webpack@^1.12.10', 'babel-loader@^6.2.1',
+        'babel-core@^6.4.0', 'babel-preset-es2015@^6.3.13'
         ];
   },
 
@@ -44,7 +45,7 @@ module.exports = generators.Base.extend({
         },
         {
           type: 'list',
-          name: 'slot-id',
+          name: 'slotId',
           message: 'What type of plugin (slot ID)?',
           choices: PLUGIN_TYPES,
           default: 'menu'
@@ -89,7 +90,7 @@ module.exports = generators.Base.extend({
             description: answers.description,
             license: answers.license,
             dicoogle: {
-                slotId: answers['slot-id'],
+                slotId: answers.slotId,
                 caption: answers.caption
             },
             author: {
@@ -112,6 +113,7 @@ module.exports = generators.Base.extend({
     copyStatics: function() {
       this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
       this.fs.copy(this.templatePath('_babelrc'), this.destinationPath('.babelrc'));
+      this.fs.copy(this.templatePath('_webpack.config.js'), this.destinationPath('webpack.config.js'));
     },
     
     copyTemplates: function() {
