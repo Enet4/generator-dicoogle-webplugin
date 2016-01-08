@@ -18,7 +18,7 @@ Create a directory for the web UI plugin project and run the generator:
     mkdir dicoogle-my-webplugin
     yo dicoogle-webplugin
 
-Then simply follow the instructions.
+Then simply follow the instructions. The generated project will contain a README file with building and deployment instructions.
 
 ## License
 

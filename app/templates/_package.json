@@ -8,6 +8,7 @@
   "scripts": {
     "build": "webpack",
     "build-debug": "webpack --devtool inline-source-map",
+    "build-watch": "webpack --devtool inline-source-map --watch",
     "prepublish": "npm run build"
   },
   <% if (author.name && author.email) { %>

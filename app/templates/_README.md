@@ -6,7 +6,14 @@ This is a web UI <%= dicoogle.slotId %> plugin for Dicoogle.
 ## Building
 
 ```bash
-npm install
+npm install # OR npm run build
+```
+
+## Debugging
+
+```bash
+npm run build-debug # build plugin with inline source-maps
+npm run build-watch # build for debugging and watch for source code changes
 ```
 
 ## Deploying
