@@ -1,7 +1,7 @@
 var generators = require('yeoman-generator');
 var capitalize = require('capitalize');
 
-var PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'settings' ];
+var PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'result-batch', 'settings' ];
 
 module.exports = generators.Base.extend({
   helper: {
