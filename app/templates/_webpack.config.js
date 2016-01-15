@@ -16,5 +16,5 @@ module.exports = {
       }
     ]
   },
-  externals: ['react', 'dicoogle-client', 'dicoole-webcore']
+  externals: ['react', 'dicoogle-client', 'dicoole-webcore', 'reflux', 'react-bootstrap', 'react-bootstrap-table', 'react-imageloader', 'react-router', 'react-router-bootstrap']
 };
