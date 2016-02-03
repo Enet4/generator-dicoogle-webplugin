@@ -1,8 +1,8 @@
 module.exports = {
   entry: './src/index.js',
   output: {
-      filename: 'module.js',
-      libraryTarget: 'commonjs2'
+    filename: 'module.js',
+    libraryTarget: 'commonjs2'
   },
   module: {
     loaders: [
@@ -16,5 +16,5 @@ module.exports = {
       }
     ]
   },
-  externals: ['react', 'dicoogle-client', 'dicoole-webcore', 'reflux', 'react-bootstrap', 'react-bootstrap-table', 'react-imageloader', 'react-router', 'react-router-bootstrap']
+  externals: ['react', 'react-dom', 'dicoogle-client', 'dicoole-webcore', 'reflux', 'react-bootstrap', 'react-bootstrap-table', 'react-imageloader', 'react-router', 'react-router-bootstrap']
 };
