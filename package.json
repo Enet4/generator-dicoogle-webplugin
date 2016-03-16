@@ -1,6 +1,6 @@
 {
   "name": "generator-dicoogle-webplugin",
-  "version": "0.2.0-rc.2",
+  "version": "0.2.0",
   "description": "A Yeoman generator for Dicoogle web UI plugin projects",
   "repository": {
     "type": "git",
