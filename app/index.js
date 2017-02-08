@@ -1,37 +1,40 @@
-var generators = require('yeoman-generator');
-var capitalize = require('capitalize');
+const Generator = require('yeoman-generator');
+const capitalize = require('capitalize');
 
-var PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'result-batch', 'settings' ];
+const PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'result-batch', 'settings' ];
 
-module.exports = generators.Base.extend({
-  helper: {
-    cleanAppname: function(appname) {
-      return appname.replace(/\s/g, '-');
-    },
-    makeCaption: function(appname) {
-      if (appname.indexOf("dicoogle-") === 0) {
-          appname = appname.substr(9);
+module.exports = class WebpluginGenerator extends Generator {
+
+  constructor(args, opts) {
+    super(args, opts)
+
+    this.helper = {
+      cleanAppname(appname) {
+        return appname.replace(/\s/g, '-');
+      },
+      makeCaption(appname) {
+        if (appname.indexOf("dicoogle-") === 0) {
+            appname = appname.substr(9);
+        }
+        if (appname.indexOf("-plugin") === appname.length - 7) {
+            appname = appname.substr(0, appname.length - 7);
+        }
+        return capitalize.words(appname.replace(/\\-+/g, ' '));
       }
-      if (appname.indexOf("-plugin") === appname.length - 7) {
-          appname = appname.substr(0, appname.length - 7);
-      }
-      return capitalize.words(appname.replace(/\\-+/g, ' '));
-    }
-  },
+    };
+  }
 
-  initializing: function() {
+  initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
     this.devDependencies = [
-        'webpack@^1.12.10', 'babel-loader@^6.2.1',
-        'babel-core@^6.4.0', 'babel-preset-es2015@^6.3.13'
+        'webpack@^2.2.0', 'babel-loader@^6.2.10',
+        'babel-core@^6.22.1', 'babel-preset-es2015@^6.22.0'
         ];
-  },
+  }
 
-  prompting: function() {
-      var done = this.async();
-      
-      this.prompt([
+  prompting() {
+      return this.prompt([
         {
           type: 'input',
           name: 'appname',
@@ -80,7 +83,7 @@ module.exports = generators.Base.extend({
           message: 'Enter your Github User name.',
           store: true
         }
-      ], function(answers) {
+      ]).then((answers) => {
         this.author = {
             name: answers.authorName,
             email: answers.authorEmail
@@ -98,38 +101,31 @@ module.exports = generators.Base.extend({
                 email: answers.authorEmail,
                 github: answers.authorGithub
             }
-        };
-        done();
-      }.bind(this));
-  },
+        }
+      });
+  }
 
-  configuring: {
-  },
-
-  default: {
-  },
-
-  writing: {
-    copyStatics: function() {
+  writing() {
+    const copyStatics = () => {
       this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
       this.fs.copy(this.templatePath('_babelrc'), this.destinationPath('.babelrc'));
       this.fs.copy(this.templatePath('_webpack.config.js'), this.destinationPath('webpack.config.js'));
-    },
-    
-    copyTemplates: function() {
+    }
+    const copyTemplates = () => {
       this.fs.copyTpl(this.templatePath('_README.md'), this.destinationPath('README.md'), this.data);
       this.fs.copyTpl(this.templatePath('_package.json'), this.destinationPath('package.json'), this.data);
       this.fs.copyTpl(this.templatePath('src/_index.js'), this.destinationPath('src/index.js'), this.data);
     }
-  },
-
-  conflicts: {
-  },
-
-  install: function() {
-        this.npmInstall(this.devDependencies, {'saveDev': true});
-  },
-
-  end: {
+    copyStatics();
+    copyTemplates();
   }
-});
+
+  install() {
+    this.npmInstall(this.devDependencies, {'saveDev': true});
+  }
+
+  end() {
+    console.log("The web plugin is ready for development!");
+  }
+
+};

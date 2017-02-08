@@ -5,14 +5,18 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /src\/.*\.js?$/,
         exclude: /node_modules/,
-        loader: 'babel', 
-        query: {
-          presets: ['es2015']
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ["es2015"]
+            }
+          }
+        ]
       }
     ]
   },

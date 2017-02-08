@@ -1,7 +1,7 @@
-# generator-dicoogle-webplugin
+# generator-dicoogle-webplugin [![npm version](https://badge.fury.io/js/generator-dicoogle-webplugin.svg)](https://badge.fury.io/js/generator-dicoogle-webplugin)
 > A Yeoman generator for Dicoogle web UI plugin projects.
 
-As of Dicoogle 2.1.0, the user interface can be extended with plugins that are dynamically loaded into the web page. Please see the [Dicoogle Webcore Readme](https://github.com/bioinformatics-ua/dicoogle/tree/5065bb1f3ce3cfdacd9389a62ce25caee5937e69/webcore) for more information about this mechanism and how to create your own plugins.
+Since version 2.1.0 of [Dicoogle](https://github.com/bioinformatics-ua/dicoogle), the user interface can be extended with plugins that are dynamically loaded into the web page. Please see the [Dicoogle Webcore Readme](https://github.com/bioinformatics-ua/dicoogle/tree/master/webcore#creating-plugins) for more information on how to create your own plugins.
 
 ## Installation
 First make sure that yeoman is globally installed. If not:
@@ -13,9 +13,10 @@ Then, install the generator (also globally):
     npm install -g generator-dicoogle-webplugin
 
 ## Usage
-Create a directory for the web UI plugin project and run the generator:
+Create a directory for the web UI plugin project and run the generator on it:
 
-    mkdir dicoogle-my-webplugin
+    mkdir webplugin-project # or your directory name of choice
+    cd webplugin-project
     yo dicoogle-webplugin
 
 Then simply follow the instructions. The generated project will contain a README file with building and deployment instructions.
