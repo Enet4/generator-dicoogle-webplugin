@@ -64,9 +64,9 @@ module.exports = class WebpluginGenerator extends Generator {
         {
           type: 'list',
           name: 'projectType',
-          message: 'Would you like to use TypeScript or JavaScript with Babel?',
+          message: 'Would you like to use JavaScript with Babel, or TypeScript?',
           choices: [
-            {name: 'ES2016 with Babel', value: 'babel'},
+            {name: 'ECMAScript2016 with Babel', value: 'babel'},
             {name: 'TypeScript', value: 'typescript'}
           ],
           default: 'babel'
