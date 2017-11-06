@@ -27,8 +27,15 @@ module.exports = class WebpluginGenerator extends Generator {
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = [ 'webpack@^2.2.0' ];
-    this.babelPresets = ['es2015', 'es2016'];
+    this.devDependencies = [ 'webpack@^3.8.1', 'webpack-merge@^4.1.1', 'babel-minify-webpack-plugin@^0.2.0'];
+    this.babelPresets = [['@babel/env', {
+      targets: {
+        browsers: [
+          "> 1%",
+          "last 2 versions"
+        ]
+      }
+    }]];
   }
 
   prompting() {
@@ -66,7 +73,7 @@ module.exports = class WebpluginGenerator extends Generator {
           name: 'projectType',
           message: 'Would you like to use JavaScript with Babel, or TypeScript?',
           choices: [
-            {name: 'ECMAScript2016 with Babel', value: 'babel'},
+            {name: 'ECMAScript2016+ with Babel', value: 'babel'},
             {name: 'TypeScript', value: 'typescript'}
           ],
           default: 'babel'
@@ -130,23 +137,24 @@ module.exports = class WebpluginGenerator extends Generator {
 
         if (this.projectType === 'typescript') {
           this.devDependencies.push(
-            'typescript@~2.3.0',
+            // cannot upgrade TypeScript further due to React type definitions
+            // (see issue DefinitelyTyped/DefinitelyTyped#17578)
+            'typescript@~2.3.1',
             'ts-loader@^2.2.2');
         } else if (this.projectType === 'babel') {
             this.devDependencies.push(
-              'babel-loader@^7.1.1',
-              'babel-core@^6.24.1',
-              'babel-preset-es2015@^6.24.1',
-              'babel-preset-es2016@^6.24.1'
+              'babel-loader@^8.0.0-beta.0',
+              '@babel/core@^7.0.0-beta.31',
+              '@babel/preset-env@^7.0.0-beta.31'
             );
         }
 
         if (this.componentType === 'react') {
           if (this.projectType === 'babel') {
             this.data.entry = './src/index.jsx';
-            this.devDependencies.push('babel-preset-react@^6.24.1');
+            this.devDependencies.push('@babel/preset-react@^7.0.0-beta.31');
 
-            this.babelPresets.push('react');
+            this.babelPresets.push('@babel/react');
           } else if (this.projectType === 'typescript') {
             this.data.entry = './src/index.tsx';
           }
@@ -164,7 +172,6 @@ module.exports = class WebpluginGenerator extends Generator {
   writing() {
     const copyStatics = () => {
       this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
-      //this.fs.copy(this.templatePath('_babelrc'), this.destinationPath('.babelrc'));
 
       if (this.projectType === 'typescript') {
         this.fs.copy(this.templatePath('src/_webcore.ts'), this.destinationPath('src/webcore.ts'));
@@ -174,32 +181,38 @@ module.exports = class WebpluginGenerator extends Generator {
     const copyTemplates = () => {
       this.fs.copyTpl(this.templatePath('_README.md'), this.destinationPath('README.md'), this.data);
       this.fs.copyTpl(this.templatePath('_package.json'), this.destinationPath('package.json'), this.data);
-
+      this.fs.copyTpl(this.templatePath('_webpack.dev.js'), this.destinationPath('webpack.dev.js'), this.data);
+      this.fs.copyTpl(this.templatePath('_webpack.prod.js'), this.destinationPath('webpack.prod.js'), this.data);
+      
       if (this.projectType === 'babel') {
         // ES2016 project
 
-        this.fs.copyTpl(this.templatePath('_babel_webpack.config.js'), this.destinationPath('webpack.config.js'), this.data);
+        this.fs.copyTpl(this.templatePath('_babel_webpack.common.js'), this.destinationPath('webpack.common.js'), this.data);
 
+        let indexFile;
         if (this.componentType === 'dom') {
-          this.fs.copyTpl(this.templatePath('src/_index.js'), this.destinationPath(this.data.entry), this.data);
+          indexFile = 'src/_index.js';
         } else if (this.componentType === 'react') {
-          this.fs.copyTpl(this.templatePath('src/_index.jsx'), this.destinationPath(this.data.entry), this.data);
+          indexFile = 'src/_index.jsx';
         } else {
           throw 'unsupported component type';
         }
+        this.fs.copyTpl(this.templatePath(indexFile), this.destinationPath(this.data.entry), this.data);
 
       } else if (this.projectType === 'typescript') {
         // TypeScript project
 
-        this.fs.copyTpl(this.templatePath('_ts_webpack.config.js'), this.destinationPath('webpack.config.js'), this.data);
+        this.fs.copyTpl(this.templatePath('_ts_webpack.common.js'), this.destinationPath('webpack.common.js'), this.data);
 
+        let indexFile;
         if (this.componentType === 'dom') {
-          this.fs.copyTpl(this.templatePath('src/_index.ts'), this.destinationPath(this.data.entry), this.data);
+          indexFile = 'src/_index.ts';
         } else if (this.componentType === 'react') {
-          this.fs.copyTpl(this.templatePath('src/_index.tsx'), this.destinationPath(this.data.entry), this.data);
+          indexFile = 'src/_index.tsx';
         } else {
           throw 'unsupported component type';
         }
+        this.fs.copyTpl(this.templatePath(indexFile), this.destinationPath(this.data.entry), this.data);
       } else {
         throw 'unsupported project type';
       }

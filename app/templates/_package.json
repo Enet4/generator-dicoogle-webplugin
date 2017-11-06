@@ -7,10 +7,10 @@
     "module.js"
   ],
   "scripts": {
-    "build": "webpack",
-    "build-debug": "webpack --devtool inline-source-map",
-    "build-watch": "webpack --devtool inline-source-map --watch",
-    "prepublish": "npm run build"
+    "build": "webpack --config webpack.prod.js",
+    "build-debug": "webpack --config webpack.dev.js",
+    "build-watch": "webpack --config webpack.dev.js --watch",
+    "prepare": "npm run build"
   },
   <% if (author.name && author.email) { %>
   "author": "<%= author.name %> <<%= author.email %>>",
