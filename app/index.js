@@ -140,7 +140,7 @@ module.exports = class WebpluginGenerator extends Generator {
             // cannot upgrade TypeScript further due to React type definitions
             // (see issue DefinitelyTyped/DefinitelyTyped#17578)
             'typescript@~2.3.1',
-            'ts-loader@^2.2.2');
+            'ts-loader@^3.1.0');
         } else if (this.projectType === 'babel') {
             this.devDependencies.push(
               'babel-loader@^8.0.0-beta.0',

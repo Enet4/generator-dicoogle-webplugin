@@ -15,10 +15,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
-            options: {
-              jsx: <%= componentType === 'react' %>,
-            }
+            loader: 'ts-loader'
           }
         ]
       }
