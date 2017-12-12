@@ -14,15 +14,17 @@ export default class MyPlugin {
         // TODO mount a new web component here
         const div = document.createElement('div');
         div.innerHTML = 'Hello, Dicoogle!';
-        parent.appendChild(div);
-        <% if (dicoogle.slotId === 'query') { %>
+        parent.appendChild(div);<% if (dicoogle.slotId === 'query') { %>
         // dispatch a query with `Dicoogle.issueQuery`:
         //   Dicoogle.issueQuery('CT');
-        <% } %>
+<% } %>
     }
-    <% if (dicoogle.slotId === 'result') { %>
+<% if (dicoogle.slotId === 'result') { %>
     onResult(results) {
         // TODO show results here
-    }
-    <% } %>
+    }<% } %>
+<% if (semver.gte(minimumVersion, '2.5.0')) { %>
+    onReceiveData(data) {
+        // retrieve data here
+    }<% } %>
 }

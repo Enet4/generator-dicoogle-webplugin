@@ -1,4 +1,5 @@
 // TypeScript declarations for the Dicoogle webcore
+import {SearchPatientResult} from 'dicoogle-client';
 
 export type WebPluginType = string;
 
@@ -26,4 +27,17 @@ export interface Webcore {
     emit(eventName: WebcoreEvent, ...args: any[]);
     
     emitSlotSignal(slotDOM: HTMLElement, eventName: WebcoreEvent, data: any);
+}
+
+export interface PluginData {
+    query?: string;
+    queryProvider?: string[];
+    results?: SearchPatientResult[];
+    [att: string]: any;
+}
+
+export interface SlotHTMLElement extends HTMLElement {
+    slotId: string;
+    pluginName: string;
+    data?: PluginData;
 }

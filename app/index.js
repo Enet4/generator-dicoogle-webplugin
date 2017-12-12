@@ -1,5 +1,6 @@
 const Generator = require('yeoman-generator');
 const capitalize = require('capitalize');
+const semver = require('semver');
 
 const PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'result-batch', 'settings' ];
 
@@ -7,7 +8,10 @@ module.exports = class WebpluginGenerator extends Generator {
 
   constructor(args, opts) {
     super(args, opts)
-
+  
+    // Add optional argument for experimental features.
+    this.argument('experimental', { type: String, optional: true, default: "" });
+  
     this.helper = {
       cleanAppname(appname) {
         return appname.replace(/\s/g, '-');
@@ -39,7 +43,7 @@ module.exports = class WebpluginGenerator extends Generator {
   }
 
   prompting() {
-      return this.prompt([
+      const questions = [
         {
           type: 'input',
           name: 'appname',
@@ -58,16 +62,22 @@ module.exports = class WebpluginGenerator extends Generator {
           choices: PLUGIN_TYPES,
           default: 'menu'
         },
-        /* {
+        {
+          type: 'input',
+          name: 'caption',
+          message: 'Enter a caption for your plugin.',
+          default: this.helper.makeCaption(this.appname)
+        },
+        {
           type: 'list',
-          name: 'componentType',
-          message: 'Would you like to write a bare DOM plugin or a React component?',
+          name: 'minimumVersion',
+          message: 'Please specify the _minimum_ version of Dicoogle required for this plugin.',
           choices: [
-            {name: 'Bare DOM', value: 'dom'},
-            {name: 'React component', value: 'react'}
+            {name: '2.4.0 (recommended)', value: '2.4.0'},
+            {name: '2.5.0 (exposes more features)', value: '2.5.0'}
           ],
-          default: 'dom'
-        }, */
+          default: '2.4.0'
+        },
         {
           type: 'list',
           name: 'projectType',
@@ -77,14 +87,22 @@ module.exports = class WebpluginGenerator extends Generator {
             {name: 'TypeScript', value: 'typescript'}
           ],
           default: 'babel'
-        },
-        {
-          type: 'input',
-          name: 'caption',
-          message: 'Enter a caption for your plugin.',
-          default: this.helper.makeCaption(this.appname)
-        },
-        {
+        }];
+
+      if (this.options['experimental'] === 'experimental') {
+        questions.push({
+          type: 'list',
+          name: 'componentType',
+          message: 'Would you like to write a bare DOM plugin or a React component?',
+          choices: [
+            {name: 'Bare DOM', value: 'dom'},
+            {name: 'React component', value: 'react'}
+          ],
+          default: 'dom'
+        });
+      }
+        
+      questions.push({
           type: 'input',
           name: 'license',
           message: 'Enter a license for this project.',
@@ -108,14 +126,15 @@ module.exports = class WebpluginGenerator extends Generator {
           message: 'Enter your Github User name.',
           store: true
         }
-      ]).then((answers) => {
-        // react components are not supported yet
-        const componentType = 'dom';
+      );
+
+      return this.prompt(questions).then((answers) => {
+        const componentType = answers.componentType || 'dom';
 
         this.author = {
             name: answers.authorName,
             email: answers.authorEmail
-        }
+        };
         this.data = {
             appname: this.helper.cleanAppname(answers.appname),
             description: answers.description,
@@ -130,8 +149,10 @@ module.exports = class WebpluginGenerator extends Generator {
                 github: answers.authorGithub
             },
             componentType,
-            projectType: answers.projectType
-        }
+            projectType: answers.projectType,
+            minimumVersion: answers.minimumVersion,
+            semver
+        };
         this.componentType = componentType;
         this.projectType = answers.projectType;
 
