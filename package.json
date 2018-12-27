@@ -23,6 +23,6 @@
   "dependencies": {
     "capitalize": "^2.0.0",
     "semver": "^5.4.1",
-    "yeoman-generator": "^2.0.1"
+    "yeoman-generator": "^3.2.0"
   }
 }
