@@ -2,7 +2,8 @@ const Generator = require('yeoman-generator');
 const capitalize = require('capitalize');
 const semver = require('semver');
 
-const PLUGIN_TYPES = ['menu', 'search', 'query', 'result', 'result-options', 'result-batch', 'settings' ];
+const PLUGIN_TYPES = ['menu', 'result-options', 'result-batch', 'settings' ];
+const EXPERIMENTAL_PLUGIN_TYPES = [...PLUGIN_TYPES, 'search', 'query', 'result' ];
 
 module.exports = class WebpluginGenerator extends Generator {
 
@@ -31,7 +32,7 @@ module.exports = class WebpluginGenerator extends Generator {
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = [ 'webpack@^4.28.2', 'webpack-merge@^4.1.1', 'babel-minify-webpack-plugin@^0.3.1'];
+    this.devDependencies = [ 'webpack@^4.28.2', 'webpack-merge@^4.1.5', 'babel-minify-webpack-plugin@^0.3.1'];
     this.babelPresets = [['@babel/env', {
       targets: {
         browsers: [
@@ -59,7 +60,7 @@ module.exports = class WebpluginGenerator extends Generator {
           type: 'list',
           name: 'slotId',
           message: 'What type of plugin (slot ID)?',
-          choices: PLUGIN_TYPES,
+          choices: this.options['experimental'] == 'experimental' ? EXPERIMENTAL_PLUGIN_TYPES : PLUGIN_TYPES,
           default: 'menu'
         },
         {
@@ -158,10 +159,8 @@ module.exports = class WebpluginGenerator extends Generator {
 
         if (this.projectType === 'typescript') {
           this.devDependencies.push(
-            // cannot upgrade TypeScript further due to React type definitions
-            // (see issue DefinitelyTyped/DefinitelyTyped#17578)
-            'typescript@~2.3.1',
-            'ts-loader@^3.1.0');
+            'typescript@^2.9.2',
+            'ts-loader@^4.5.0');
         } else if (this.projectType === 'babel') {
             this.devDependencies.push(
               'babel-loader@^8.0.0-beta.0',
