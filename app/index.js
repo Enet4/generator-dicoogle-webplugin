@@ -31,7 +31,7 @@ module.exports = class WebpluginGenerator extends Generator {
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = [ 'webpack@^3.8.1', 'webpack-merge@^4.1.1', 'babel-minify-webpack-plugin@^0.3.1'];
+    this.devDependencies = [ 'webpack@^4.28.2', 'webpack-merge@^4.1.1', 'babel-minify-webpack-plugin@^0.3.1'];
     this.babelPresets = [['@babel/env', {
       targets: {
         browsers: [
