@@ -18,21 +18,34 @@ module.exports = class WebpluginGenerator extends Generator {
         return appname.replace(/\s/g, '-');
       },
       makeCaption(appname) {
+        appname = this.trimAppname(appname);
+        return capitalize.words(appname.replace(/\\-+/g, ' '));
+      },
+      trimAppname(appname) {
         if (appname.indexOf("dicoogle-") === 0) {
-            appname = appname.substr(9);
+          appname = appname.substr(9);
         }
         if (appname.indexOf("-plugin") === appname.length - 7) {
             appname = appname.substr(0, appname.length - 7);
         }
-        return capitalize.words(appname.replace(/\\-+/g, ' '));
+        return appname;
       }
     };
+
+    this.helper.makeCaption = this.helper.makeCaption.bind(this.helper);
+    this.helper.trimAppname = this.helper.trimAppname.bind(this.helper);
   }
 
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = [ 'webpack@^4.28.2', 'webpack-merge@^4.1.5', 'babel-minify-webpack-plugin@^0.3.1'];
+    this.devDependencies = [
+      'webpack@^4.28.2',
+      'webpack-cli@^3.1.2',
+      'webpack-merge@^4.1.5',
+      'babel-minify-webpack-plugin@^0.3.1',
+      'file-loader@^3.0.1'
+    ];
     this.babelPresets = [['@babel/env', {
       targets: {
         browsers: [
@@ -60,7 +73,7 @@ module.exports = class WebpluginGenerator extends Generator {
           type: 'list',
           name: 'slotId',
           message: 'What type of plugin (slot ID)?',
-          choices: this.options['experimental'] == 'experimental' ? EXPERIMENTAL_PLUGIN_TYPES : PLUGIN_TYPES,
+          choices: this.options['experimental'] === 'experimental' ? EXPERIMENTAL_PLUGIN_TYPES : PLUGIN_TYPES,
           default: 'menu'
         },
         {
@@ -138,6 +151,7 @@ module.exports = class WebpluginGenerator extends Generator {
         };
         this.data = {
             appname: this.helper.cleanAppname(answers.appname),
+            trimmedAppname: this.helper.trimAppname(answers.appname),
             description: answers.description,
             license: answers.license,
             dicoogle: {

@@ -2,6 +2,7 @@ module.exports = {
   entry: '<%= entry %>',
   output: {
     filename: 'module.js',
+    path: __dirname,
     libraryTarget: 'commonjs2'
   },
   module: {

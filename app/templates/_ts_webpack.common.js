@@ -2,6 +2,7 @@ module.exports = {
   entry: '<%= entry %>',
   output: {
     filename: 'module.js',
+    path: __dirname,
     libraryTarget: 'commonjs2'
   },
   resolve: {
@@ -15,7 +16,10 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
           }
         ]
       }
