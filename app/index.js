@@ -74,10 +74,10 @@ module.exports = class WebpluginGenerator extends Generator {
           name: 'minimumVersion',
           message: 'Please specify the _minimum_ version of Dicoogle required for this plugin.',
           choices: [
-            {name: '2.4.0 (recommended)', value: '2.4.0'},
-            {name: '2.5.0 (exposes more features)', value: '2.5.0'}
+            {name: '2.5.0 (exposes more features)', value: '2.5.0'},
+            {name: '2.4.0 (more compatible)', value: '2.4.0'}
           ],
-          default: '2.4.0'
+          default: '2.5.0'
         },
         {
           type: 'list',
