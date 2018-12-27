@@ -21,7 +21,7 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "capitalize": "^1.0.0",
+    "capitalize": "^2.0.0",
     "semver": "^5.4.1",
     "yeoman-generator": "^2.0.1"
   }
