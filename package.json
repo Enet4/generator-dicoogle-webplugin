@@ -11,18 +11,18 @@
     "app"
   ],
   "scripts": {},
-  "author": "Eduardo Pinho <eduardopinho@ua.pt>",
+  "author": "Eduardo Pinho <eduardopinho@bmd-software.com>",
   "license": "MIT",
   "keywords": [
     "yeoman-generator",
     "dicoogle"
   ],
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10.0.0"
   },
   "dependencies": {
-    "capitalize": "^2.0.0",
-    "semver": "^5.4.1",
-    "yeoman-generator": "^3.2.0"
+    "capitalize": "^2.0.3",
+    "semver": "^7.3.5",
+    "yeoman-generator": "^4.13.0"
   }
 }
