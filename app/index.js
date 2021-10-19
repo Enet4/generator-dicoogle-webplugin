@@ -256,13 +256,13 @@ module.exports = class WebpluginGenerator extends Generator {
   }
 
   install() {
-    this.npmInstall(this.devDependencies, {'saveDev': true});
+    this.addDevDependencies(this.devDependencies);
     if (this.projectType === 'typescript') {
-      this.npmInstall([
+      this.addDevDependencies([
         'dicoogle-client@^4.1.1',
         '@types/react@^0.14.0',
         '@types/react-dom@^0.14.0'
-      ], {'save': true});
+      ]);
     }
   }
 
