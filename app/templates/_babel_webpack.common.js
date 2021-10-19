@@ -8,7 +8,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /src\/.*\.jsx?$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -22,7 +22,7 @@ module.exports = {
     ]
   },
   externals: [
-    'react', 'react-dom', 'dicoogle-client', 'dicoole-webcore', 'reflux', 'react-bootstrap',
+    'react', 'react-dom', 'dicoogle-client', 'dicoogle-webcore', 'reflux', 'react-bootstrap',
     'react-bootstrap-table', 'react-imageloader', 'react-router', 'react-router-bootstrap'
   ]
 };
