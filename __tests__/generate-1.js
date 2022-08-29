@@ -14,7 +14,7 @@ describe('generator test 1: menu webplugin project in TypeScript', () => {
                 description: "A test plugin (#1)",
                 slotId: "menu",
                 caption: "Test1",
-                minimumVersion: "2.5.0",
+                minimumVersion: "3.1.0",
                 projectType: "typescript",
                 license: "MIT",
                 authorName: "John Doe",
@@ -45,6 +45,8 @@ describe('generator test 1: menu webplugin project in TypeScript', () => {
             },
             devDependencies: {
                 webpack: /.+/,
+                // only Dicoogle 3.1.0 uses dicoogle client v5
+                "dicoogle-client": /\^5/,
             }
         });
 

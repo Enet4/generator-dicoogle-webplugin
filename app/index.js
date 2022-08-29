@@ -85,12 +85,13 @@ module.exports = class WebpluginGenerator extends Generator {
         {
           type: 'list',
           name: 'minimumVersion',
-          message: 'Please specify the _minimum_ version of Dicoogle required for this plugin.',
+          message: 'Please specify the minimum version of Dicoogle required for this plugin.',
           choices: [
-            {name: '2.5.0 (exposes more features)', value: '2.5.0'},
-            {name: '2.4.0 (more compatible)', value: '2.4.0'}
+            {name: '3.1.0', value: '3.1.0'},
+            {name: '2.5.0 (legacy)', value: '2.5.0'},
+            {name: '2.4.0 (legacy, more compatible)', value: '2.4.0'}
           ],
-          default: '2.5.0'
+          default: '3.1.0'
         },
         {
           type: 'list',
@@ -209,6 +210,7 @@ module.exports = class WebpluginGenerator extends Generator {
       description,
       license,
       author,
+      minimumVersion,
       dicoogle,
     } = this.data;
 
@@ -263,7 +265,8 @@ module.exports = class WebpluginGenerator extends Generator {
       pkg.devDependencies[name] = req;
     }
     if (this.projectType === 'typescript') {
-      pkg.devDependencies['dicoogle-client'] = "^4.1.1";
+      let dicoogleClientVersion = semver.gte(minimumVersion, '3.1.0') ? '5.1.0' : '^4.1.1';
+      pkg.devDependencies['dicoogle-client'] = dicoogleClientVersion;
       if (this.componentType === 'react') {
         pkg.devDependencies['@types/react'] = "^0.14.0";
         pkg.devDependencies['@types/react-dom'] = "^0.14.0";
