@@ -10,7 +10,9 @@
   "files": [
     "app"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "author": "Eduardo Pinho <eduardopinho@bmd-software.com>",
   "license": "MIT",
   "keywords": [
@@ -24,5 +26,10 @@
     "capitalize": "^2.0.3",
     "semver": "^7.3.5",
     "yeoman-generator": "^5.4.2"
+  },
+  "devDependencies": {
+    "jest": "^29.0.1",
+    "yeoman-environment": "^3.3.0",
+    "yeoman-test": "^6.2.0"
   }
 }
