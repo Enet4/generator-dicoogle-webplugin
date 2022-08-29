@@ -203,7 +203,80 @@ module.exports = class WebpluginGenerator extends Generator {
       });
   }
 
+  buildPackageJson() {
+    const {
+      appname,
+      description,
+      license,
+      author,
+      dicoogle,
+    } = this.data;
+
+    const pkg = {
+      name: appname,
+      version: "0.1.0",
+      description: description,
+      main: "module.js",
+      files: [
+        "module.js"
+      ],
+      scripts: {
+        "build": "webpack --config webpack.prod.js",
+        "build-debug": "webpack --config webpack.dev.js",
+        "build-watch": "webpack --config webpack.dev.js --watch",
+        "prepare": "npm run build"
+      },
+      keywords: [
+        "dicoogle", "dicoogle-plugin"
+      ],
+      dicoogle: {
+        "slot-id": dicoogle.slotId,
+        "module-file": "module.js"
+      }
+    };
+
+    if (author.name && author.email) {
+      pkg.author = author.name + " " + author.email;
+    } else if (author.name) {
+      pkg.author = author.name;
+    }
+    if (typeof license === 'string') {
+      pkg.license = license;
+    }
+    
+    if (author.github) {
+      pkg.repository = {
+          "type": "git",
+          "url": author.github + "/" + appname,
+      };
+    }
+    if (dicoogle.caption && dicoogle.caption !== '') {
+        pkg.dicoogle.caption = dicoogle.caption;
+    }
+
+    // dev dependencies
+    pkg.devDependencies = {};
+    for (const dep of this.devDependencies) {
+      let splitPoint = dep.lastIndexOf('@');
+      let name = dep.slice(0, splitPoint);
+      let req = dep.slice(splitPoint + 1);
+      pkg.devDependencies[name] = req;
+    }
+    if (this.projectType === 'typescript') {
+      pkg.devDependencies['dicoogle-client'] = "^4.1.1";
+      if (this.componentType === 'react') {
+        pkg.devDependencies['@types/react'] = "^0.14.0";
+        pkg.devDependencies['@types/react-dom'] = "^0.14.0";
+      }
+    }
+
+    return pkg;
+  }
+
   writing() {
+    const pkgJson = this.buildPackageJson();
+    this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
+
     const copyStatics = () => {
       this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
 
@@ -214,7 +287,6 @@ module.exports = class WebpluginGenerator extends Generator {
     };
     const copyTemplates = () => {
       this.fs.copyTpl(this.templatePath('_README.md'), this.destinationPath('README.md'), this.data);
-      this.fs.copyTpl(this.templatePath('_package.json'), this.destinationPath('package.json'), this.data);
       this.fs.copyTpl(this.templatePath('_webpack.dev.js'), this.destinationPath('webpack.dev.js'), this.data);
       this.fs.copyTpl(this.templatePath('_webpack.prod.js'), this.destinationPath('webpack.prod.js'), this.data);
       
@@ -253,17 +325,6 @@ module.exports = class WebpluginGenerator extends Generator {
     };
     copyStatics();
     copyTemplates();
-  }
-
-  install() {
-    this.addDevDependencies(this.devDependencies);
-    if (this.projectType === 'typescript') {
-      this.addDevDependencies([
-        'dicoogle-client@^4.1.1',
-        '@types/react@^0.14.0',
-        '@types/react-dom@^0.14.0'
-      ]);
-    }
   }
 
   end() {
