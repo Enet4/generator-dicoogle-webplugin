@@ -20,12 +20,12 @@
     "dicoogle"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.0.0"
   },
   "dependencies": {
-    "capitalize": "^2.0.3",
-    "semver": "^7.3.5",
-    "yeoman-generator": "^5.4.2"
+    "capitalize": "^2.0.4",
+    "semver": "^7.3.7",
+    "yeoman-generator": "^5.7.0"
   },
   "devDependencies": {
     "jest": "^29.0.1",
