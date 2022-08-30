@@ -1,7 +1,7 @@
 // TypeScript declarations for the Dicoogle webcore
-import {SearchPatientResult} from 'dicoogle-client';
+import type {SearchPatientResult} from 'dicoogle-client';
 
-export type WebPluginType = string;
+export type WebPluginType = 'menu' | 'result-options' | 'result-batch' | 'settings' | string;
 
 export type WebcoreEvent = 'load' | 'result' | 'result-selection-ready' | string;
 

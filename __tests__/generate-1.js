@@ -44,7 +44,7 @@ describe('generator test 1: menu webplugin project in TypeScript', () => {
                 "module-file": "module.js"
             },
             devDependencies: {
-                webpack: /.+/,
+                parcel: /.+/,
                 // only Dicoogle 3.1.0 uses dicoogle client v5
                 "dicoogle-client": /\^5/,
             }
@@ -53,10 +53,8 @@ describe('generator test 1: menu webplugin project in TypeScript', () => {
         // has source files and build files
         runResult.assertFile([
             'src/index.ts',
-            'webpack.common.js',
-            'webpack.dev.js',
-            'webpack.prod.js',
             'tsconfig.json',
+            'build-package-json.js',
             '.gitignore',
             'README.md',
         ]);
@@ -67,6 +65,17 @@ describe('generator test 1: menu webplugin project in TypeScript', () => {
         child_process.execSync('npm install --no-audit', {cwd: runResult.cwd});
 
         // has the output file module.js via `prepare`
-        runResult.assertFileContent('module.js', 'module.exports');
+        runResult.assertFileContent('dist/module.js', 'module.exports');
+        // has the simplified output file package.json
+        runResult.assertJsonFileContent('dist/package.json', {
+            name: "plugin1",
+            description: "A test plugin (#1)",
+            license: "MIT",
+            dicoogle: {
+                "slot-id": "menu",
+                "caption": "Test1",
+                "module-file": "module.js"
+            }
+        });
     });
 });
