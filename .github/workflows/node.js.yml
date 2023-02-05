@@ -28,6 +28,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: export NODE_OPTIONS=--openssl-legacy-provider
+    - run: echo "NODE_OPTIONS=--openssl-legacy-provider" >> $GITHUB_ENV
     - run: npm ci
     - run: npm test
