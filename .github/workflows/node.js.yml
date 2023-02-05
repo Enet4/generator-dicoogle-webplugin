@@ -28,7 +28,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - if: matrix.node-version == '18.x'
-      run: echo "NODE_OPTIONS=--openssl-legacy-provider" >> $GITHUB_ENV
     - run: npm ci
-    - run: npm test
+    - if: matrix.node-version == '18.x'
+      run: NODE_OPTIONS=--openssl-legacy-provider npm test
+    - if: matrix.node-version != '18.x'
+      run: npm test
