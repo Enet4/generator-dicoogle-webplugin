@@ -3,7 +3,7 @@ import {SearchPatientResult} from 'dicoogle-client';
 
 export type WebPluginType = string;
 
-export type WebcoreEvent = 'load' | 'result' | string;
+export type WebcoreEvent = 'load' | 'result' | 'result-selection-ready' | string;
 
 export interface WebPlugin {
     name: string,
@@ -35,9 +35,33 @@ export interface PluginData {
     results?: SearchPatientResult[];
     [att: string]: any;
 }
+<% if (semver.get(minimumVersion, '3.1.0')) { %>
+export interface ResultSelectionReadyEvent {
+    detail: ResultSelectionData;
+}
+<% if (semver.get(minimumVersion, '3.3.2')) { %>
+export type ResultSelectionData = {search: {data: SearchDetails}, selected: ResultSelection};
+
+export interface SearchDetails {
+    results: SearchPatientResult[],
+    elapsedTime: number,
+    numResults: number,
+}
+<% } else { %>
+export type ResultSelectionData = ResultSelection;
+<% } %><% } %>
+
+export interface ResultSelection {
+    contents: object[],
+    level: string,
+}
 
 export interface SlotHTMLElement extends HTMLElement {
     slotId: string;
     pluginName: string;
     data?: PluginData;
+<% if (semver.get(minimumVersion, '3.1.0')) { %>
+    addEventListener(eventName: 'result-selection-ready', listener: (ev: ResultSelectionReadyEvent) => void): void;
+<% } %>
+    addEventListener(eventName: string, listener: (ev: Event) => void): void;
 }
