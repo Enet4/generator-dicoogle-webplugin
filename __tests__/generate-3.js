@@ -64,6 +64,17 @@ describe('generator test 3: result-batch webplugin project in TypeScript', () =>
         child_process.execSync('npm install --no-audit', {cwd: runResult.cwd});
 
         // has the output file module.js via `prepare`
-        runResult.assertFileContent('module.js', 'module.exports');
+        runResult.assertFileContent('dist/module.js', 'module.exports');
+        // has the simplified output file package.json
+        runResult.assertJsonFileContent('dist/package.json', {
+            name: "plugin3",
+            description: "A test plugin (#3)",
+            license: "MIT",
+            dicoogle: {
+                "slot-id": "result-batch",
+                "caption": "Test3",
+                "module-file": "module.js"
+            }
+        });
     });
 });
