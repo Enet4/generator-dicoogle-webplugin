@@ -16,9 +16,9 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, lts/*, latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        # Minimum supported version for project scaffolding is 14,
+        # Minimum supported version for project scaffolding is 16,
         # but building the new plugin project may have different requirements.
 
     steps:
@@ -29,7 +29,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - if: matrix.node-version == '18.x'
-      run: NODE_OPTIONS=--openssl-legacy-provider npm test
-    - if: matrix.node-version != '18.x'
-      run: npm test
+    - run: npm test

@@ -220,7 +220,8 @@ module.exports = class WebpluginGenerator extends Generator {
         "module-file": "module.js"
       },
       engines: {
-        node: ">= 16"
+        node: ">= 16",
+        npm: ">= 7"
       },
       targets: {
         main: {
