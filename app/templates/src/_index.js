@@ -17,7 +17,11 @@ export default class MyPlugin {
         parent.appendChild(div);<% if (dicoogle.slotId === 'query') { %>
         // dispatch a query with `Dicoogle.issueQuery`:
         //   Dicoogle.issueQuery('CT');
-<% } %>
+<% } %><% if (dicoogle.slotId === 'result-batch') { %>
+        // act on results selected
+        slot.addEventListener('result-selection-ready', (ev) => {
+            // use ev.detail
+        });<% } %>
     }
 <% if (dicoogle.slotId === 'result') { %>
     onResult(results) {

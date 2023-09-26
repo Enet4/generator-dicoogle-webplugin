@@ -2,7 +2,7 @@ const path = require('path');
 const helpers = require('yeoman-test');
 const child_process = require('child_process');
 
-describe('generator test 2: legacy result-options webplugin project in ECMAScript', () => {
+describe('generator test 3: result-batch webplugin project in TypeScript', () => {
     /** @type {helpers.RunResult}  */
     let runResult;
 
@@ -10,12 +10,12 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
         runResult = await helpers
             .create(path.join(__dirname, '..'))
             .withPrompts({
-                appname: "plugin2",
-                description: "A test plugin (#2)",
-                slotId: "result-options",
-                caption: "Test2",
-                minimumVersion: "2.5.0",
-                projectType: "babel",
+                appname: "plugin3",
+                description: "A test plugin (#3)",
+                slotId: "result-batch",
+                caption: "Test3",
+                minimumVersion: "3.3.2",
+                projectType: "typescript",
                 license: "MIT",
                 authorName: "John Doe",
                 authorEmail: "doe.j@nowhere",
@@ -32,15 +32,15 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
     it('generates correctly', () => {
         // contains package.json
         runResult.assertJsonFileContent('package.json', {
-            name: "plugin2",
-            description: "A test plugin (#2)",
+            name: "plugin3",
+            description: "A test plugin (#3)",
             license: "MIT",
             scripts: {
                 "build": /.+/,
             },
             dicoogle: {
-                "slot-id": "result-options",
-                "caption": "Test2",
+                "slot-id": "result-batch",
+                "caption": "Test3",
                 "module-file": "module.js"
             },
             devDependencies: {
@@ -50,7 +50,7 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
 
         // has source files and build files
         runResult.assertFile([
-            'src/index.js',
+            'src/index.ts',
             'webpack.common.js',
             'webpack.dev.js',
             'webpack.prod.js',
@@ -58,7 +58,8 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
             'README.md',
         ]);
 
-        runResult.assertFileContent('src/index.js', 'export default class MyPlugin');
+        runResult.assertFileContent('src/index.ts', 'export default class MyPlugin');
+        runResult.assertFileContent('src/index.ts', "slot.addEventListener('result-selection-ready', (ev) => {");
 
         // force running npm install on target directory
         child_process.execSync('npm install --no-audit', {cwd: runResult.cwd});
