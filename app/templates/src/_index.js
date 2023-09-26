@@ -21,7 +21,7 @@ export default class MyPlugin {
         // act on results selected
         slot.addEventListener('result-selection-ready', (ev) => {
             // use ev.detail
-        });<% } %><% } %>
+        });<% } %>
     }
 <% if (dicoogle.slotId === 'result') { %>
     onResult(results) {
