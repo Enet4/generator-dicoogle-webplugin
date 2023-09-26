@@ -49,11 +49,10 @@ describe('generator test 3: result-batch webplugin project in TypeScript', () =>
         });
 
         // has source files and build files
+        // has source files and build files
         runResult.assertFile([
             'src/index.ts',
-            'webpack.common.js',
-            'webpack.dev.js',
-            'webpack.prod.js',
+            'build-package-json.js',
             '.gitignore',
             'README.md',
         ]);
