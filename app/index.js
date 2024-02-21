@@ -47,7 +47,7 @@ module.exports = class WebpluginGenerator extends Generator {
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = ['parcel@^2.7.0'];
+    this.devDependencies = ['parcel@^2.11.0'];
   }
 
   prompting() {
