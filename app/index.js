@@ -5,6 +5,14 @@ const semver = require('semver');
 const PLUGIN_TYPES = ['menu', 'result-options', 'result-batch', 'settings' ];
 const EXPERIMENTAL_PLUGIN_TYPES = [...PLUGIN_TYPES, 'search', 'query', 'result' ];
 
+/** Dependencies which are already in Dicoogle webapp
+ * and should not be bundled into the web plugin by default.
+ */
+const EXTERNAL_DEPENDENCIES = [
+  'react', 'react-dom', 'dicoogle-client', 'dicoogle-webcore', 'reflux', 'react-bootstrap',
+  'react-bootstrap-table', 'react-imageloader', 'react-router', 'react-router-bootstrap'
+];
+
 module.exports = class WebpluginGenerator extends Generator {
 
   constructor(args, opts) {
@@ -39,21 +47,7 @@ module.exports = class WebpluginGenerator extends Generator {
   initializing() {
     this.author = {};
     this.appname = this.helper.cleanAppname(this.appname);
-    this.devDependencies = [
-      'webpack@^4.28.2',
-      'webpack-cli@^3.1.2',
-      'webpack-merge@^4.1.5',
-      'babel-minify-webpack-plugin@^0.3.1',
-      'file-loader@^3.0.1'
-    ];
-    this.babelPresets = [['@babel/env', {
-      targets: {
-        browsers: [
-          "> 1%",
-          "last 2 versions"
-        ]
-      }
-    }]];
+    this.devDependencies = ['parcel@^2.11.0'];
   }
 
   prompting() {
@@ -96,12 +90,12 @@ module.exports = class WebpluginGenerator extends Generator {
         {
           type: 'list',
           name: 'projectType',
-          message: 'Would you like to use JavaScript with Babel, or TypeScript?',
+          message: 'Would you like to use plain JavaScript or TypeScript?',
           choices: [
-            {name: 'ECMAScript2016+ with Babel', value: 'babel'},
+            {name: 'JavaScript', value: 'javascript'},
             {name: 'TypeScript', value: 'typescript'}
           ],
-          default: 'babel'
+          default: 'javascript'
         }];
 
       if (this.options['experimental'] === 'experimental') {
@@ -172,35 +166,22 @@ module.exports = class WebpluginGenerator extends Generator {
         this.componentType = componentType;
         this.projectType = answers.projectType;
 
-        if (this.projectType === 'typescript') {
-          this.devDependencies.push(
-            'typescript@^2.9.2',
-            'ts-loader@^4.5.0');
-        } else if (this.projectType === 'babel') {
-            this.devDependencies.push(
-              'babel-loader@^8.0.0-beta.0',
-              '@babel/core@^7.0.0-beta.31',
-              '@babel/preset-env@^7.0.0-beta.31'
-            );
-        }
-
         if (this.componentType === 'react') {
-          if (this.projectType === 'babel') {
-            this.data.entry = './src/index.jsx';
-            this.devDependencies.push('@babel/preset-react@^7.0.0-beta.31');
+          if (this.projectType === 'javascript') {
+            this.data.entry = 'src/index.jsx';
 
             this.babelPresets.push('@babel/react');
           } else if (this.projectType === 'typescript') {
-            this.data.entry = './src/index.tsx';
+            this.data.entry = 'src/index.tsx';
+            this.devDependencies.push('@types/react@^0.14.0');
           }
         } else if (this.componentType === 'dom') {
-          if (this.projectType === 'babel') {
-            this.data.entry = './src/index.js';
+          if (this.projectType === 'javascript') {
+            this.data.entry = 'src/index.js';
           } else {
-            this.data.entry = './src/index.ts';
+            this.data.entry = 'src/index.ts';
           }
         }
-        this.data.babelPresets = this.babelPresets;
       });
   }
 
@@ -214,18 +195,21 @@ module.exports = class WebpluginGenerator extends Generator {
       dicoogle,
     } = this.data;
 
+    const source = this.data.entry;
+
     const pkg = {
       name: appname,
       version: "0.1.0",
       description: description,
-      main: "module.js",
+      source,
+      main: "dist/module.js",
       files: [
-        "module.js"
+        "dist/module.js"
       ],
       scripts: {
-        "build": "webpack --config webpack.prod.js",
-        "build-debug": "webpack --config webpack.dev.js",
-        "build-watch": "webpack --config webpack.dev.js --watch",
+        "build": "node build-package-json.js && parcel build --no-source-maps",
+        "build-debug": "node build-package-json.js && parcel build --no-optimize",
+        "build-watch": "node build-package-json.js && parcel watch",
         "prepare": "npm run build"
       },
       keywords: [
@@ -234,8 +218,34 @@ module.exports = class WebpluginGenerator extends Generator {
       dicoogle: {
         "slot-id": dicoogle.slotId,
         "module-file": "module.js"
-      }
+      },
+      engines: {
+        node: ">= 16",
+        npm: ">= 7"
+      },
+      targets: {
+        main: {
+          context: "browser",
+          outputFormat: "commonjs",
+          isLibrary: false,
+          includeNodeModules: {
+            "@swc/helpers": true,
+          },
+          optimize: true,
+          sourceMap: {
+            inline: true
+          },
+          engines: {
+            browsers: "> 1%, last 2 versions, not dead"
+          },
+        },
+      },
     };
+
+    // external dependencies
+    for (const dep of EXTERNAL_DEPENDENCIES) {
+      pkg.targets.main.includeNodeModules[dep] = false;
+    }
 
     if (author.name && author.email) {
       pkg.author = author.name + " " + author.email;
@@ -282,6 +292,7 @@ module.exports = class WebpluginGenerator extends Generator {
 
     const copyStatics = () => {
       this.fs.copy(this.templatePath('_gitignore'), this.destinationPath('.gitignore'));
+      this.fs.copy(this.templatePath('_build-package-json.js'), this.destinationPath('build-package-json.js'));
 
       if (this.projectType === 'typescript') {
         this.fs.copy(this.templatePath('src/_webcore.ts'), this.destinationPath('src/webcore.ts'));
@@ -290,13 +301,9 @@ module.exports = class WebpluginGenerator extends Generator {
     };
     const copyTemplates = () => {
       this.fs.copyTpl(this.templatePath('_README.md'), this.destinationPath('README.md'), this.data);
-      this.fs.copyTpl(this.templatePath('_webpack.dev.js'), this.destinationPath('webpack.dev.js'), this.data);
-      this.fs.copyTpl(this.templatePath('_webpack.prod.js'), this.destinationPath('webpack.prod.js'), this.data);
-      
-      if (this.projectType === 'babel') {
-        // ES2016 project
 
-        this.fs.copyTpl(this.templatePath('_babel_webpack.common.js'), this.destinationPath('webpack.common.js'), this.data);
+      if (this.projectType === 'javascript') {
+        // JavaScript project
 
         let indexFile;
         if (this.componentType === 'dom') {
@@ -310,8 +317,6 @@ module.exports = class WebpluginGenerator extends Generator {
 
       } else if (this.projectType === 'typescript') {
         // TypeScript project
-
-        this.fs.copyTpl(this.templatePath('_ts_webpack.common.js'), this.destinationPath('webpack.common.js'), this.data);
 
         let indexFile;
         if (this.componentType === 'dom') {

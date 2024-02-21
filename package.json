@@ -20,7 +20,8 @@
     "dicoogle"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16",
+    "npm": ">=7"
   },
   "dependencies": {
     "capitalize": "^2.0.4",
@@ -30,6 +31,6 @@
   "devDependencies": {
     "jest": "^29.0.1",
     "yeoman-environment": "^3.3.0",
-    "yeoman-test": "^6.2.0"
+    "yeoman-test": "^6.3.0"
   }
 }

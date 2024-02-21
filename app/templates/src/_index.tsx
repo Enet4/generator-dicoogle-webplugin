@@ -1,5 +1,5 @@
 import * as React from 'react';
-<% if (dicoogle.slotId === 'result') { %>import {DicoogleAccess, SearchPatientResult} from 'dicoogle-client';<% } else { %>import {DicoogleAccess} from 'dicoogle-client';<% } %>
+<% if (dicoogle.slotId === 'result') { %>import type {DicoogleAccess, SearchPatientResult} from 'dicoogle-client';<% } else { %>import type {DicoogleAccess} from 'dicoogle-client';<% } %>
 <% if (semver.gte(minimumVersion, '2.5.0')) { %>import {Webcore, SlotHTMLElement, PluginData} from './webcore';<% } else { %>import {Webcore, SlotHTMLElement} from './webcore';<% } %>
 
 // global Dicoogle access instance
@@ -20,11 +20,13 @@ class PluginComponent extends React.Component<Props, State> {
         this.handleQueryRequest = this.handleQueryRequest.bind(this);<% } %>
     }
     <% if (dicoogle.slotId === 'query') { %>
+
     handleQueryRequest(queryText, queryProviders) {
         // dispatch a query with `Dicoogle.issueQuery`:
         //   Dicoogle.issueQuery(queryText);
     }
 <% } %>
+
     render() {
         return (<div>Hello, Dicoogle!</div>);
     }

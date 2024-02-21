@@ -1,4 +1,4 @@
-<% if (dicoogle.slotId === 'result') { %>import {DicoogleAccess, SearchPatientResult} from 'dicoogle-client';<% } else { %>import {DicoogleAccess} from 'dicoogle-client';<% } %>
+<% if (dicoogle.slotId === 'result') { %>import type {DicoogleAccess, SearchPatientResult} from 'dicoogle-client';<% } else { %>import type {DicoogleAccess} from 'dicoogle-client';<% } %>
 <% if (semver.gte(minimumVersion, '2.5.0')) { %>import {Webcore, SlotHTMLElement, PluginData} from './webcore';<% } else { %>import {Webcore, SlotHTMLElement} from './webcore';<% } %>
 
 // global Dicoogle access instance
@@ -23,7 +23,9 @@ export default class MyPlugin {
             // use ev.detail
         });<% } %>
     }
-<% if (dicoogle.slotId === 'result') { %>   onResult(results: SearchPatientResult[]) {
+<% if (dicoogle.slotId === 'result') { %>
+
+    onResult(results: SearchPatientResult[]) {
         // TODO show results here
     }<% } %><% if (semver.gte(minimumVersion, '2.5.0')) { %>
 

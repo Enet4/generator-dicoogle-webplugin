@@ -15,7 +15,7 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
                 slotId: "result-options",
                 caption: "Test2",
                 minimumVersion: "2.5.0",
-                projectType: "babel",
+                projectType: "javascript",
                 license: "MIT",
                 authorName: "John Doe",
                 authorEmail: "doe.j@nowhere",
@@ -51,9 +51,6 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
         // has source files and build files
         runResult.assertFile([
             'src/index.js',
-            'webpack.common.js',
-            'webpack.dev.js',
-            'webpack.prod.js',
             '.gitignore',
             'README.md',
         ]);
@@ -64,6 +61,18 @@ describe('generator test 2: legacy result-options webplugin project in ECMAScrip
         child_process.execSync('npm install --no-audit', {cwd: runResult.cwd});
 
         // has the output file module.js via `prepare`
-        runResult.assertFileContent('module.js', 'module.exports');
+        runResult.assertFileContent('dist/module.js', 'module.exports');
+        // has the simplified output file package.json
+        runResult.assertJsonFileContent('dist/package.json', {
+            name: "plugin2",
+            description: "A test plugin (#2)",
+            license: "MIT",
+            dicoogle: {
+                "slot-id": "result-options",
+                "caption": "Test2",
+                "module-file": "module.js"
+            }
+        });
+
     });
 });
